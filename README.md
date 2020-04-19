@@ -1,68 +1,84 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Moesif Dashboard Embed Example
 
-## Available Scripts
+## Background
 
-In the project directory, you can run:
+For customers of Moesif, we allow creation of templated workspaces that you can embed and share with your customers.
 
-### `npm start`
+An example use case: suppose you are an API provider that uses Moesif dashboard to look at all API calls, but you'd like to to embed an portion of that APIs call to the users of your APIs. So that a particular user can only look at APIs calls they made.
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Creation of a Dynamic Template
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+First, go to your Moesif Dashboard, and when you click Share, one of the options is to create a Dynamic Embedded Workspace. When that is created.
+And you can configure a list of "parameter" that can be templated and limit the scope. For example: "user_id" in our example use case above.
 
-### `npm test`
+You should obtain these two:
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Management Token.
+- Template WorkspaceId (this the id for the Dynamic Workspace).
 
-### `npm run build`
+## Embed Instructions
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+To embed, basically there are 2 high level steps:
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+1. On your backend, implement an API to call Moesif to specify scope for the templated workspace, and generate a short lived token.
+2. On your front end, call your backend API, then use the url returned for your iframe to be embedded.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Key files in this example:
 
-### `npm run eject`
+- `server.js` file is the server code example with an endpoint `/embed-dash(/:userId)` for you can specific parameters for an instance of the workspace, and a short lived token to provide to your user.
+- `./src/EmbeddedDash.js` is an react example of front end code.
+- `./public/non-react-example.html` is a non react example of the front end code.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## To run this example:
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- `npm install` to install all dependencies.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+- create a `.env` file with these this things:
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+```
+MOESIF_MANAGEMENT_TOKEN=YOUR_MANAGEMENT_TOKEN
+MOESIF_TEMPLATE_WORKSPACE_ID=YOUR_TEMPLATE_WORKSPACE_ID
+```
 
-## Learn More
+_Your management token must be kept secure._
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- `node server.js` to start the server.
+- `npm start` to start the client.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+To see the react version go to `http://localhost:3000`
+To see the non react version go to `http://localhost:3000/non-react-example`;
 
-### Code Splitting
+## The Details for API call to generate the temporary token:
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+The API endpoint:
 
-### Analyzing the Bundle Size
+```
+https://api.moesif.com/v1/portal/replay/~/workspaces/{{templatedWorkspaceId}}/access_token
+```
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+With these Headers:
 
-### Making a Progressive Web App
+- `Content-Type` to `application/json`
+- `Authorization` to `Bearer YOUR_MANAGEMENT_TOKEN`
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+Successful Response will be in this format:
 
-### Advanced Configuration
+```
+{
+  access_token: 'XXXXXXXX',
+  url: 'https://wwww.moesif.com/public/XXXXXXXXX/ws/AAAAAAA?embed=true
+}
+```
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+The url already have access token in it, so you can just use the url directly inside an iframe to be embedded anywhere.
 
-### Deployment
+But if you want to add additional parameters, this is the structure of the embed url:
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+`https://www.moesif.com/public/{{access_token}}/ws/{{templateWorkspaceId}}?embed=true&show_user_filters=false`
 
-### `npm run build` fails to minify
+list of supported URL parameters you can set are:
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+- embed: true or false. If false, it will have headers and footer.
+- show_user_filters: true or false. If false, in the embedded workspace it will not have any ability to do filters based on user parameters.
+- show_company_filters: true or false.
+- primary_color: eg. #FFFFFF set an primary color.

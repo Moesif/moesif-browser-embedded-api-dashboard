@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+    <title>None React App Example</title>
+    <style>
+      .iframeWrapper {
+        position: relative;
+        padding-bottom: 56.25%; /* 16:9 */
+        padding-top: 25px;
+        height: 0;
+      }
+      .iframeWrapper iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <h1>
+      Moesif Embedded Dashboard Implementation Example with Vanilla Javascript
+    </h1>
+    <p>Native example</p>
+    <script>
+      function fetchEmbedInfo() {
+        const iframeElement = document.getElementById("preview-frame");
+        const errorElement = document.getElementById("error-message");
+        // make api call to the server
+        // to get generated dashboard information
+        fetch("/embed-dash/user123456")
+          .then(function (response) {
+            if (response.ok) {
+              return response;
+            } else {
+              console.log(response.statusText);
+              throw Error(response.statusText);
+            }
+          })
+          .then(function (response) {
+            return response.json();
+          })
+          .then(function (body) {
+            iframeElement.src = body ? body.url : "";
+            errorElement.innerText = JSON.stringify(body);
+          })
+          .catch(function (err) {
+            errorElement.innerText =
+              "Could not load. Please check if you created .env with MOESIF_MANAGEMENT_TOKEN && MOESIF_TEMPLATE_WORKSPACE_ID and run `node server.js`.";
+            iframeElement.src = "https://www.google.com";
+          });
+      }
+    </script>
+    <button onClick="fetchEmbedInfo()">Load Embed Dash</button>
+    <p id="error-message"></p>
+    <div class="iframeWrapper">
+      <iframe
+        id="preview-frame"
+        src=""
+        name="Moesif embedded dash example"
+        frameborder="0"
+        noresize="noresize"
+        allowfullscreen
+      >
+      </iframe>
+    </div>
+  </body>
+</html>
