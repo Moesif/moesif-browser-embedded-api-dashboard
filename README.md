@@ -1,10 +1,10 @@
-## Moesif Dashboard Embed Example
+## Moesif API Dashboard Embed Example
 
 ## Background
 
-For customers of Moesif, we allow creation of templated workspaces that you can embed and share with your customers.
+For customers of Moesif, we allow creation of templated workspaces that you can embed and share with your users.
 
-An example use case: suppose you are an API provider that uses Moesif dashboard to look at all API calls, but you'd like to to embed an portion of that APIs call to the users of your APIs. So that a particular user can only look at APIs calls they made.
+An example use case this repo will focus on: suppose you are an API provider that uses Moesif dashboard to look at all API calls, but you'd like to to embed an portion of that data APIs call to the users of your APIs. So that a particular user can only look at APIs calls he/she made.
 
 ## Creation of a Dynamic Template
 
@@ -60,6 +60,18 @@ With these Headers:
 
 - `Content-Type` to `application/json`
 - `Authorization` to `Bearer YOUR_MANAGEMENT_TOKEN`
+
+Request Body will contain data to fill out the template:
+
+```
+{
+  template: {
+    values: {
+      user_id: AN_USER_ID,
+    },
+  }
+}
+```
 
 Successful Response will be in this format:
 
