@@ -30,7 +30,7 @@ function EmbeddedDash() {
 
   return (
     <div>
-      <button onClick={load}>Load Dashload</button>
+      <button onClick={load}>Load Embedded Dash</button>
       {loading && <p>loading...</p>}
       {error && (
         <p>
