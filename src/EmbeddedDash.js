@@ -4,11 +4,12 @@ function EmbeddedDash() {
   const [dashEmbedInfo, setEmbedInfo] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [userId, setUserId] = useState("");
 
   function load() {
     setLoading(true);
     setError(null);
-    fetch("/embed-dash/user123456")
+    fetch("/embed-dash/" + encodeURIComponent(userId))
       .then((response) => {
         if (response.ok) {
           return response;
@@ -30,7 +31,15 @@ function EmbeddedDash() {
 
   return (
     <div>
-      <button onClick={load}>Load Embedded Dash</button>
+      <button disabled={!userId} onClick={load}>
+        Load Embedded Dash
+      </button>
+      For User Id:
+      <input
+        value={userId}
+        placeholder="enter an userId"
+        onChange={(evt) => setUserId(evt.target.value)}
+      />
       {loading && <p>loading...</p>}
       {error && (
         <p>

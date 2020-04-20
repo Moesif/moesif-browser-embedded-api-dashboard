@@ -48,9 +48,10 @@
       function fetchEmbedInfo() {
         const iframeElement = document.getElementById("preview-frame");
         const errorElement = document.getElementById("error-message");
+        const userIdElement = document.getElementById("userId-input");
         // make api call to the server
         // to get generated dashboard information
-        fetch("/embed-dash/user123456")
+        fetch("/embed-dash/" + encodeURIComponent(userIdElement.value))
           .then(function (response) {
             if (response.ok) {
               return response;
@@ -74,6 +75,7 @@
       }
     </script>
     <button onClick="fetchEmbedInfo()">Load Embed Dash</button>
+    for userId: <input id="userId-input" placeholder="userId" />
     <p id="error-message"></p>
     <div class="iframeWrapper">
       <iframe
