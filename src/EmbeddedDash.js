@@ -1,9 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 function EmbeddedDash() {
   const [dashEmbedInfo, setEmbedInfo] = useState(null);
   const [error, setError] = useState(null);
-  useEffect(() => {
+  const [loading, setLoading] = useState(false);
+
+  function load() {
+    setLoading(true);
+    setError(null);
     fetch("/embed-dash/user123456")
       .then((response) => {
         if (response.ok) {
@@ -16,15 +20,18 @@ function EmbeddedDash() {
       .then((response) => response.json())
       .then((body) => {
         setEmbedInfo(body);
+        setLoading(false);
       })
       .catch((err) => {
         setError(err);
+        setLoading(false);
       });
-  }, []);
+  }
 
   return (
     <div>
-      {!dashEmbedInfo && !error && <p>loading...</p>}
+      <button onClick={load}>Load Dashload</button>
+      {loading && <p>loading...</p>}
       {error && (
         <p>
           Could not load. Please check if you created .env with
