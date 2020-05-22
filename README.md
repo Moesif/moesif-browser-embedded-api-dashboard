@@ -53,7 +53,7 @@ To see the non react version go to `http://localhost:3000/non-react-example`;
 The API endpoint:
 
 ```
-https://api.moesif.com/v1/portal/replay/~/workspaces/{{templatedWorkspaceId}}/access_token
+https://api.moesif.com/v1/portal/~/workspaces/{{templatedWorkspaceId}}/access_token
 ```
 
 With these Headers:

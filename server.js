@@ -42,7 +42,7 @@ app.get("/embed-dash(/:userId)", function (req, res) {
 
   fetch(
     moesifApiEndPoint +
-      "/v1/portal/replay/~/workspaces/" +
+      "/v1/portal/~/workspaces/" +
       templateWorkspaceId +
       "/access_token",
     {
