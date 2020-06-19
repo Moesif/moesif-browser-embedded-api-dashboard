@@ -40,11 +40,18 @@ app.get("/embed-dash(/:userId)", function (req, res) {
     },
   };
 
+  // please set your desired expriation for the generated short lived token.
+  // our recommendation is to match your session time you use for authenticating your users.
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const expiration = tomorrow.toISOString();
+
   fetch(
     moesifApiEndPoint +
       "/v1/portal/~/workspaces/" +
       templateWorkspaceId +
-      "/access_token",
+      "/access_token" +
+      "?expiration=" + expiration,
     {
       method: "POST",
       headers: {

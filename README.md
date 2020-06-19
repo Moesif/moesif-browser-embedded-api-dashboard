@@ -53,8 +53,10 @@ To see the non react version go to `http://localhost:3000/non-react-example`;
 The API endpoint:
 
 ```
-https://api.moesif.com/v1/portal/~/workspaces/{{templatedWorkspaceId}}/access_token
+https://api.moesif.com/v1/portal/~/workspaces/{{templatedWorkspaceId}}/access_token?expiration=2020-10-05T15%3A48%3A00.000Z
 ```
+
+The expiration time of the temporary token.
 
 With these Headers:
 
@@ -88,9 +90,10 @@ But if you want to add additional parameters, this is the structure of the embed
 
 `https://www.moesif.com/public/{{access_token}}/ws/{{templateWorkspaceId}}?embed=true&show_user_filters=false`
 
-list of supported URL parameters you can set are:
+List of supported URL parameters you can set are:
 
-- embed: true or false. If false, it will have headers and footer.
+- embed: true or false. If false, it will have moesif headers and moesif footer.
 - show_user_filters: true or false. If false, in the embedded workspace it will not have any ability to do filters based on user parameters.
 - show_company_filters: true or false.
 - primary_color: eg. #FFFFFF set an primary color.
+- hide_header: true or false. Default false. If true, this heads the chart configuration headers and options.
