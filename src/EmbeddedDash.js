@@ -52,8 +52,10 @@ function EmbeddedDash() {
         <div>
           <p>
             embedInfo is here:{" "}
-            {dashEmbedInfo ? JSON.stringify(dashEmbedInfo) : "not found yet"}
           </p>
+          <pre>
+            {dashEmbedInfo ? JSON.stringify(dashEmbedInfo, null, '  ') : "not found yet"}
+          </pre>
 
           <div className="iframeWrapper">
             <iframe
