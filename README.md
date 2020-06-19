@@ -56,7 +56,7 @@ The API endpoint:
 https://api.moesif.com/v1/portal/~/workspaces/{{templatedWorkspaceId}}/access_token?expiration=2020-10-05T15%3A48%3A00.000Z
 ```
 
-The expiration time of the temporary token.
+You can set the expiration of the "short-lived" temporary token to a future time, ideally match your user authentication session time.
 
 With these Headers:
 
