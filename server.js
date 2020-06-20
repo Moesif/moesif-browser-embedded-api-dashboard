@@ -40,8 +40,8 @@ app.get("/embed-dash(/:userId)", function (req, res) {
     },
   };
 
-  // please set your desired expriation for the generated short lived token.
-  // our recommendation is to match your session time you use for authenticating your users.
+  // Set your desired expiration for the generated workspace token.
+  // Moesif's recommendation is to match or be larger than your user's session time while keeping time period less than 30 days. 
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
   const expiration = tomorrow.toISOString();

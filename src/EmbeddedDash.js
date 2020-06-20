@@ -60,7 +60,7 @@ function EmbeddedDash() {
           <div className="iframeWrapper">
             <iframe
               title="Moesif embedded example react"
-              src={dashEmbedInfo.url+'&primary_color=%2332CD32&hide_header=false'}
+              src={dashEmbedInfo.url+'&primary_color=%2332CD32&hide_header=true'}
               allowFullScreen
             ></iframe>
           </div>

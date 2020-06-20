@@ -2,98 +2,76 @@
 
 ## Background
 
-For customers of Moesif, we allow creation of templated workspaces that you can embed and share with your users.
+This example shows how to use Moesif and React to embed live API logs or charts in your customer-facing app. 
+If not familiar, review the [overview of Moesif embedded charts](https://www.moesif.com/features/embedded-api-logs)
+and the [developer documentation](https://www.moesif.com/docs/api-dashboards/embed-templates/).
 
-An example use case this repo will focus on: suppose you are an API provider that uses Moesif dashboard to look at all API calls, but you'd like to to embed an portion of that data APIs call to the users of your APIs. So that a particular user can only look at APIs calls he/she made.
+This example also assumes you already have a Moesif account and [integrated a Moesif SDK](https://www.moesif.com/implementation).
 
-## Creation of a Dynamic Template
 
-First, go to your Moesif Dashboard, and when you click Share, one of the options is to create a Dynamic Embedded Workspace. When that is created.
-And you can configure a list of "parameter" that can be templated and limit the scope. For example: "user_id" in our example use case above.
+## Key files in this example:
 
-You should obtain these two:
+- `server.js` contains an endpoint `/embed-dash(/:userId)` which takes in a user id and generates a short lived token to provide to your user front end. The uri and token is scoped to the user id. 
+- `./src/EmbeddedDash.js` contains a React app with a Moesif embedded chart. 
+- `./public/non-react-example.html` contains a non react example of the same front end code. 
 
-- Management Token.
-- Template WorkspaceId (this the id for the Dynamic Workspace).
 
-## Embed Instructions
+## How to run
 
-To embed, basically there are 2 high level steps:
+This app contains both a React and non-React version. 
 
-1. On your backend, implement an API to call Moesif to specify scope for the templated workspace, and generate a short lived token.
-2. On your front end, call your backend API, then use the url returned for your iframe to be embedded.
+### 1. Create an embed template
 
-### Key files in this example:
+First you need to create an embed template in Moesif. To do so, log into your Moesif account and then go to the chart that you would like. 
 
-- `server.js` file is the server code example with an endpoint `/embed-dash(/:userId)` for you can specific parameters for an instance of the workspace, and a short lived token to provide to your user.
-- `./src/EmbeddedDash.js` is an react example of front end code.
-- `./public/non-react-example.html` is a non react example of the front end code.
+Click the share button and select the _Embed Template_ tab. A dynamic template 
+is very similar to a static embed/public link, except the filter criteria can contain dynamic fields.
+Similar to merge tags and handlebars, a dynamic field such as user id is set when the workspace token is generated. 
 
-## To run this example:
+Get the embed instructions which will display the workspace id and the instructions to generate workspace tokens. 
 
-- `npm install` to install all dependencies.
+### 2. Set up your environment
 
-- create a `.env` file with these this things:
+- Run `npm install` to install all dependencies.
+
+- Create a `.env` file with your actual variables from step 1. 
 
 ```
 MOESIF_MANAGEMENT_TOKEN=YOUR_MANAGEMENT_TOKEN
 MOESIF_TEMPLATE_WORKSPACE_ID=YOUR_TEMPLATE_WORKSPACE_ID
 ```
 
-_Your management token must be kept secure._
-
-- `node server.js` to start the server.
-- `npm start` to start the client.
+### 3. Run the app
+  
+- Run `node server.js` to start the server.
+- Run `npm start` to start the client.
 
 To see the react version go to `http://localhost:3000`
 To see the non react version go to `http://localhost:3000/non-react-example`;
 
-## The Details for API call to generate the temporary token:
+## Display Options
 
-The API endpoint:
+There are URL parameters you can add to the final iFrame page to customize the look. 
 
-```
-https://api.moesif.com/v1/portal/~/workspaces/{{templatedWorkspaceId}}/access_token?expiration=2020-10-05T15%3A48%3A00.000Z
-```
+### embed
+Boolean. When set to true, enables _embed mode_ which hides navigation, user and company filters and adjusts chart layout to be embed friendly.
+This should always be set to true when embedding a chart except for exceptional cases. 	
 
-You can set the expiration of the "short-lived" temporary token to a future time, ideally match your user authentication session time.
+### hide_header
+Setting this to true will hide all elements besides the chart itself or the event stream and pagination. 
+If you don't want to display any filters or other chart options to your users, set this to true.
 
-With these Headers:
+### show_user_filters 
+Embed mode will hide user filters, but you can override this behavior to show user filters by setting this option to true. 
+Most Moesif customers don't want to show user or company filters as the embedded chart 
+is for a single customer. However, there are use cases where you do want to show these filters. 
 
-- `Content-Type` to `application/json`
-- `Authorization` to `Bearer YOUR_MANAGEMENT_TOKEN`
+### show_company_filters 
+Embed mode will hide company filters, but you can override this behavior to show user filters by setting this option to true. 
+Most Moesif customers don't want to show user or company filters as the embedded chart 
+is for a single customer. However, there are use cases where you do want to show these filters. 
 
-Request Body will contain data to fill out the template:
-
-```
-{
-  template: {
-    values: {
-      user_id: AN_USER_ID,
-    },
-  }
-}
-```
-
-Successful Response will be in this format:
-
-```
-{
-  access_token: 'XXXXXXXX',
-  url: 'https://wwww.moesif.com/public/XXXXXXXXX/ws/AAAAAAA?embed=true
-}
-```
-
-The url already have access token in it, so you can just use the url directly inside an iframe to be embedded anywhere.
-
-But if you want to add additional parameters, this is the structure of the embed url:
-
-`https://www.moesif.com/public/{{access_token}}/ws/{{templateWorkspaceId}}?embed=true&show_user_filters=false`
-
-List of supported URL parameters you can set are:
-
-- embed: true or false. If false, it will have moesif headers and moesif footer.
-- show_user_filters: true or false. If false, in the embedded workspace it will not have any ability to do filters based on user parameters.
-- show_company_filters: true or false.
-- primary_color: eg. #FFFFFF set an primary color.
-- hide_header: true or false. Default false. If true, this heads the chart configuration headers and options.
+### primary_color
+You can set the primary_color to a _URL encoded_ hex value that matches your brand colors such as `?primary_color=%2332CD32`
+This will change the filter button, the first chart color, among other elements. If your chart has multiple datasets, 
+the secondary elements cannot be changed at this time. 
