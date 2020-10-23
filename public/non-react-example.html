@@ -46,6 +46,17 @@
     <p>Native example</p>
     <script>
       function fetchEmbedInfo() {
+        function testLocalIfNeeded(url) {
+          if (url) {
+            return url
+              .replace("https://web-dev.moesif.com", "http://localhost:8080")
+              .replace("embed=true", "embed=true");
+          }
+          return url;
+        }
+
+        // make api call to the server
+        // to get generated dashboard information
         const iframeElement = document.getElementById("preview-frame");
         const errorElement = document.getElementById("error-message");
         const userIdElement = document.getElementById("userId-input");
@@ -64,8 +75,12 @@
             return response.json();
           })
           .then(function (body) {
-            iframeElement.src = body ? body.url : "";
-            errorElement.innerText = JSON.stringify(body);
+            var replacementUrl = body ? testLocalIfNeeded(body.url) : "";
+            iframeElement.src = replacementUrl;
+            errorElement.innerText =
+              JSON.stringify(body, null, " ") +
+              "\n new replaced URL: " +
+              replacementUrl;
           })
           .catch(function (err) {
             errorElement.innerText =

@@ -1,5 +1,16 @@
 import React, { useState } from "react";
 
+function testLocalIfNeeded(url) {
+  // this helper function is for us to redirect to localhost:8080
+  // and add various url parameters.
+  if (url) {
+    return url
+      .replace("https://web-dev.moesif.com", "http://localhost:8080")
+      .replace("embed=true", "embed=true&show_user_filters=false&primary_color=" + encodeURIComponent('#FFFFFF'));
+  }
+  return url;
+}
+
 function EmbeddedDash() {
   const [dashEmbedInfo, setEmbedInfo] = useState(null);
   const [error, setError] = useState(null);
@@ -60,7 +71,7 @@ function EmbeddedDash() {
           <div className="iframeWrapper">
             <iframe
               title="Moesif embedded example react"
-              src={dashEmbedInfo.url+'&primary_color=%2332CD32&hide_header=true'}
+              src={testLocalIfNeeded(dashEmbedInfo.url+'&primary_color=%2332CD32&hide_header=true')}
               allowFullScreen
             ></iframe>
           </div>
