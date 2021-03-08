@@ -1,15 +1,38 @@
 import React, { useState } from "react";
+import "react-datetime/css/react-datetime.css";
+import Datetime from "react-datetime";
+
 
 function EmbeddedDash() {
   const [dashEmbedInfo, setEmbedInfo] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [userId, setUserId] = useState("");
+  const [needDateRange, setNeedDateRange] = useState(false);
+  const [from, setFrom] = useState(null);
+  const [to, setTo] = useState(null);
 
   function load() {
+    if (!userId) {
+      window.alert('user id is needed');
+      return;
+    }
+
+    let url = `/embed-dash/${encodeURIComponent(userId)}`;
+
+    if (needDateRange) {
+      if (!from || !to) {
+        window.alert('Date range is needed');
+        return;
+      }
+      // note the from and to date range needs to be in ISO strings.
+      url = url + `?from=${from.utc().toISOString()}&to=${to.utc().toISOString()}`
+    }
+
     setLoading(true);
     setError(null);
-    fetch("/embed-dash/" + encodeURIComponent(userId))
+
+    fetch(url)
       .then((response) => {
         if (response.ok) {
           return response;
@@ -31,15 +54,39 @@ function EmbeddedDash() {
 
   return (
     <div>
-      <button disabled={!userId} onClick={load}>
+      <button
+        disabled={!userId || (needDateRange && (!from || !to))}
+        onClick={load}
+      >
         Load Embedded Dash
       </button>
-      For User Id:
-      <input
-        value={userId}
-        placeholder="enter an userId"
-        onChange={(evt) => setUserId(evt.target.value)}
-      />
+      <div>
+        Define Sandbox For User Id:
+        <input
+          value={userId}
+          placeholder="enter an userId"
+          onChange={(evt) => setUserId(evt.target.value)}
+        />
+      </div>
+      <div>
+        <p>
+          If your embedded template have dynamic date range, please provide the
+          date range here. (Note. below will be ignored if the template does not support dynamic date range).
+        </p>
+        <button
+          onClick={() => {
+            setNeedDateRange(!needDateRange);
+          }}
+        >
+          {needDateRange ? "Remove Date Range" : "Add Date Range"}
+        </button>
+        {needDateRange && (
+          <React.Fragment>
+            from: <Datetime value={from} onChange={(val) => setFrom(val)} />
+            to: <Datetime value={to} onChange={(val) => setTo(val)} />
+          </React.Fragment>
+        )}
+      </div>
       {loading && <p>loading...</p>}
       {error && (
         <p>
@@ -50,17 +97,19 @@ function EmbeddedDash() {
       )}
       {dashEmbedInfo && (
         <div>
-          <p>
-            embedInfo is here:{" "}
-          </p>
+          <p>embedInfo is here: </p>
           <pre>
-            {dashEmbedInfo ? JSON.stringify(dashEmbedInfo, null, '  ') : "not found yet"}
+            {dashEmbedInfo
+              ? JSON.stringify(dashEmbedInfo, null, "  ")
+              : "not found yet"}
           </pre>
 
           <div className="iframeWrapper">
             <iframe
               title="Moesif embedded example react"
-              src={dashEmbedInfo.url+'&primary_color=%2332CD32&hide_header=true'}
+              src={
+                dashEmbedInfo.url + "&primary_color=%2332CD32&hide_header=true"
+              }
               allowFullScreen
             ></iframe>
           </div>
