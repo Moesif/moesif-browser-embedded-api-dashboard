@@ -44,7 +44,7 @@ export default function EmbeddedDisplay(props) {
       </button>
       {showEmbedOptions && (
         <React.Fragment>
-          <h3>Optional Step 3: use query string to customize the embed display options</h3>
+          <h3>Step 3 (optional): use query string to customize the embedded display options</h3>
           primary_color:{" "}
           <input
             type="text"
