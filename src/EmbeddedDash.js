@@ -78,12 +78,12 @@ function EmbeddedDash() {
           {needDateRange ? "Remove Date Range" : "Add Date Range"}
         </button>
         If your embedded template have dynamic date range, please provide the
-        date range here. (Note. below will be ignored if the template does not
+        date range here (UTC time). (Note. below will be ignored if the template does not
         support dynamic date range).
         {needDateRange && (
           <div>
-            from: <Datetime value={from} onChange={(val) => setFrom(val)} />
-            to: <Datetime value={to} onChange={(val) => setTo(val)} />
+            from: <Datetime value={from} utc onChange={(val) => setFrom(val)} />
+            to: <Datetime value={to} utc onChange={(val) => setTo(val)} />
           </div>
         )}
       </div>
