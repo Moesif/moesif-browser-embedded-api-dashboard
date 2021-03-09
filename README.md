@@ -10,8 +10,9 @@ This example also assumes you already have a Moesif account and [integrated a Mo
 
 ## Key files in this example:
 
-- `server.js` contains an endpoint `/embed-dash(/:userId)` which takes in a user id and generates a short lived token to provide to your user front end. The uri and token is scoped to the user id.
+- `server.js` contains an endpoint `/embed-dash(/:userId)` which takes in a user id and optional date range and generates a short lived token to provide to your user front end. The uri and token is scoped to the user id.
 - `./src/EmbeddedDash.js` contains a React app with a Moesif embedded chart.
+- `./src/EmbeddedDisplay.js` contains an example to use query params to configure display options for embedded chart.
 - `./public/non-react-example.html` contains a non react example of the same front end code.
 
 ## How to run
