@@ -1,15 +1,41 @@
 import React, { useState } from "react";
+import "react-datetime/css/react-datetime.css";
+import Datetime from "react-datetime";
+import EmbeddedDisplay from "./EmbeddedDisplay";
 
 function EmbeddedDash() {
   const [dashEmbedInfo, setEmbedInfo] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [userId, setUserId] = useState("");
+  const [needDateRange, setNeedDateRange] = useState(false);
+  const [from, setFrom] = useState(null);
+  const [to, setTo] = useState(null);
 
+  // invokes the backend API end point to
+  // fill out the variables in the templates.
   function load() {
+    if (!userId) {
+      window.alert("user id is needed");
+      return;
+    }
+
+    let url = `/embed-dash/${encodeURIComponent(userId)}`;
+
+    if (needDateRange) {
+      if (!from || !to) {
+        window.alert("Date range is needed");
+        return;
+      }
+      // note the from and to date range needs to be in ISO strings.
+      url =
+        url + `?from=${from.utc().toISOString()}&to=${to.utc().toISOString()}`;
+    }
+
     setLoading(true);
     setError(null);
-    fetch("/embed-dash/" + encodeURIComponent(userId))
+
+    fetch(url)
       .then((response) => {
         if (response.ok) {
           return response;
@@ -31,15 +57,43 @@ function EmbeddedDash() {
 
   return (
     <div>
-      <button disabled={!userId} onClick={load}>
+      <h3>
+        Step 1: Fill out variables required the template workspace and obtain an
+        URI with token for the sandboxed workspace{" "}
+      </h3>
+      <div>
+        Fill in the User Id (dynamic value for the template workspace):
+        <input
+          value={userId}
+          placeholder="enter an userId"
+          onChange={(evt) => setUserId(evt.target.value)}
+        />
+      </div>
+      <div>
+        <button
+          onClick={() => {
+            setNeedDateRange(!needDateRange);
+          }}
+        >
+          {needDateRange ? "Remove Date Range" : "Add Date Range"}
+        </button>
+        If your embedded template have variable date range configured, then
+        date range (UTC time) must be provided. (Note. below will be ignored if the template does not
+        have dynamic date configured).
+        {needDateRange && (
+          <div>
+            from: <Datetime value={from} utc onChange={(val) => setFrom(val)} />
+            to: <Datetime value={to} utc onChange={(val) => setTo(val)} />
+          </div>
+        )}
+      </div>
+      <br />
+      <button
+        disabled={!userId || (needDateRange && (!from || !to))}
+        onClick={load}
+      >
         Load Embedded Dash
       </button>
-      For User Id:
-      <input
-        value={userId}
-        placeholder="enter an userId"
-        onChange={(evt) => setUserId(evt.target.value)}
-      />
       {loading && <p>loading...</p>}
       {error && (
         <p>
@@ -50,20 +104,11 @@ function EmbeddedDash() {
       )}
       {dashEmbedInfo && (
         <div>
-          <p>
-            embedInfo is here:{" "}
-          </p>
-          <pre>
-            {dashEmbedInfo ? JSON.stringify(dashEmbedInfo, null, '  ') : "not found yet"}
-          </pre>
-
-          <div className="iframeWrapper">
-            <iframe
-              title="Moesif embedded example react"
-              src={dashEmbedInfo.url+'&primary_color=%2332CD32&hide_header=true'}
-              allowFullScreen
-            ></iframe>
-          </div>
+          <h3>
+            Step 2: Use the returned URI (with token) to load the sandboxed dash
+          </h3>
+          <pre>{JSON.stringify(dashEmbedInfo, null, "  ")}</pre>
+          <EmbeddedDisplay dashEmbedInfo={dashEmbedInfo} />
         </div>
       )}
     </div>
