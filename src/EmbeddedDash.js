@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "react-datetime/css/react-datetime.css";
 import Datetime from "react-datetime";
+import IFrameWrapper from "./EmbeddedDisplay";
 
 
 function EmbeddedDash() {
@@ -103,16 +104,9 @@ function EmbeddedDash() {
               ? JSON.stringify(dashEmbedInfo, null, "  ")
               : "not found yet"}
           </pre>
-
-          <div className="iframeWrapper">
-            <iframe
-              title="Moesif embedded example react"
-              src={
-                dashEmbedInfo.url + "&primary_color=%2332CD32&hide_header=true"
-              }
-              allowFullScreen
-            ></iframe>
-          </div>
+          <IFrameWrapper
+            dashEmbedInfo={dashEmbedInfo}
+          />
         </div>
       )}
     </div>
