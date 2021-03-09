@@ -31,7 +31,9 @@ export default function EmbeddedDisplay(props) {
   const [lineValue, setLineValue] = useState(null);
   const [lineColor, setLineColor] = useState(null);
 
-  const [finalUrl, setFinalUrl] = useState(convertToLocalHost(dashEmbedInfo.finalUrl));
+  const [finalUrl, setFinalUrl] = useState(
+    convertToLocalHost(dashEmbedInfo.url)
+  );
 
   return (
     <div>
@@ -55,7 +57,7 @@ export default function EmbeddedDisplay(props) {
             checked={hideHeader}
             onChange={(evt) => setHideHeader(!hideHeader)}
           />
-          Add a line with value:{" "}
+          Add a line to time series chart with value:{" "}
           <input
             type="number"
             value={lineValue}
@@ -72,18 +74,20 @@ export default function EmbeddedDisplay(props) {
               const queryObject = {
                 primary_color: primaryColor ? primaryColor : undefined,
                 hide_header: hideHeader ? true : undefined,
-                drawing: isNaN(lineValue)
-                  ? undefined
-                  : {
-                      value: lineValue,
-                      name: "test",
-                      borderColor: lineColor || "rgba(255, 51, 181, 0.3)",
-                      backgroundColor: lineColor || "rgba(255, 51, 181, 0.3)",
-                    },
+                drawing:
+                  isNaN(lineValue) && !lineValue
+                    ? undefined
+                    : {
+                        value: lineValue,
+                        name: "test",
+                        borderColor: lineColor || "rgba(255, 51, 181, 0.3)",
+                        backgroundColor: lineColor || "rgba(255, 51, 181, 0.3)",
+                      },
               };
 
               const finalUrl =
                 convertToLocalHost(dashEmbedInfo.url) +
+                "&" +
                 qs.stringify(queryObject, { arrayFormat: "indices" });
 
               setFinalUrl(finalUrl);
