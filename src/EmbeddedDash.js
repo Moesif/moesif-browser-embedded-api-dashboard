@@ -13,6 +13,8 @@ function EmbeddedDash() {
   const [from, setFrom] = useState(null);
   const [to, setTo] = useState(null);
 
+  // invokes the backend API end point to
+  // fill out the variables in the templates.
   function load() {
     if (!userId) {
       window.alert('user id is needed');
@@ -55,6 +57,7 @@ function EmbeddedDash() {
 
   return (
     <div>
+      <h3>Step 1: Fill out variables required the template workspace and obtain an URI with token for the sandboxed workspace </h3>
       <button
         disabled={!userId || (needDateRange && (!from || !to))}
         onClick={load}
@@ -62,7 +65,7 @@ function EmbeddedDash() {
         Load Embedded Dash
       </button>
       <div>
-        Define Sandbox For User Id:
+        Fill in the User Id (dynamic value for the template workspace):
         <input
           value={userId}
           placeholder="enter an userId"
@@ -82,10 +85,10 @@ function EmbeddedDash() {
           {needDateRange ? "Remove Date Range" : "Add Date Range"}
         </button>
         {needDateRange && (
-          <React.Fragment>
+          <div>
             from: <Datetime value={from} onChange={(val) => setFrom(val)} />
             to: <Datetime value={to} onChange={(val) => setTo(val)} />
-          </React.Fragment>
+          </div>
         )}
       </div>
       {loading && <p>loading...</p>}
@@ -98,11 +101,9 @@ function EmbeddedDash() {
       )}
       {dashEmbedInfo && (
         <div>
-          <p>embedInfo is here: </p>
+          <h3>Step 2: Use the returned URI (with token) to load the sandboxed dash</h3>
           <pre>
-            {dashEmbedInfo
-              ? JSON.stringify(dashEmbedInfo, null, "  ")
-              : "not found yet"}
+            {JSON.stringify(dashEmbedInfo, null, "  ")}
           </pre>
           <EmbeddedDisplay
             dashEmbedInfo={dashEmbedInfo}

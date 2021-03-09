@@ -43,20 +43,22 @@ export default function EmbeddedDisplay(props) {
           : "show Embed Display Options"}
       </button>
       {showEmbedOptions && (
-        // these code is just to config the embed query string params
         <React.Fragment>
+          <h3>Optional Step 3: use query string to customize the embed display options</h3>
           primary_color:{" "}
           <input
             type="text"
             value={primaryColor}
             onChange={(evt) => setPrimaryColor(evt.target.value)}
           />
+          <br />
           hide_header:{" "}
           <input
             type="checkbox"
             checked={hideHeader}
             onChange={(evt) => setHideHeader(!hideHeader)}
           />
+          <br />
           Add a line to time series chart with value:{" "}
           <input
             type="number"
@@ -69,6 +71,7 @@ export default function EmbeddedDisplay(props) {
             value={lineColor}
             onChange={(evt) => setLineColor(evt.target.value)}
           />
+          <br />
           <button
             onClick={() => {
               const queryObject = {
@@ -95,6 +98,7 @@ export default function EmbeddedDisplay(props) {
           >
             Update Query Params and Reload
           </button>
+          <p>above are subset of the examples, check docs for more options.</p>
         </React.Fragment>
       )}
       <hr />
