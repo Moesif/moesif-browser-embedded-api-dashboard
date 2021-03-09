@@ -3,7 +3,6 @@ import "react-datetime/css/react-datetime.css";
 import Datetime from "react-datetime";
 import EmbeddedDisplay from "./EmbeddedDisplay";
 
-
 function EmbeddedDash() {
   const [dashEmbedInfo, setEmbedInfo] = useState(null);
   const [error, setError] = useState(null);
@@ -17,7 +16,7 @@ function EmbeddedDash() {
   // fill out the variables in the templates.
   function load() {
     if (!userId) {
-      window.alert('user id is needed');
+      window.alert("user id is needed");
       return;
     }
 
@@ -25,11 +24,12 @@ function EmbeddedDash() {
 
     if (needDateRange) {
       if (!from || !to) {
-        window.alert('Date range is needed');
+        window.alert("Date range is needed");
         return;
       }
       // note the from and to date range needs to be in ISO strings.
-      url = url + `?from=${from.utc().toISOString()}&to=${to.utc().toISOString()}`
+      url =
+        url + `?from=${from.utc().toISOString()}&to=${to.utc().toISOString()}`;
     }
 
     setLoading(true);
@@ -57,13 +57,10 @@ function EmbeddedDash() {
 
   return (
     <div>
-      <h3>Step 1: Fill out variables required the template workspace and obtain an URI with token for the sandboxed workspace </h3>
-      <button
-        disabled={!userId || (needDateRange && (!from || !to))}
-        onClick={load}
-      >
-        Load Embedded Dash
-      </button>
+      <h3>
+        Step 1: Fill out variables required the template workspace and obtain an
+        URI with token for the sandboxed workspace{" "}
+      </h3>
       <div>
         Fill in the User Id (dynamic value for the template workspace):
         <input
@@ -73,10 +70,6 @@ function EmbeddedDash() {
         />
       </div>
       <div>
-        <p>
-          If your embedded template have dynamic date range, please provide the
-          date range here. (Note. below will be ignored if the template does not support dynamic date range).
-        </p>
         <button
           onClick={() => {
             setNeedDateRange(!needDateRange);
@@ -84,6 +77,9 @@ function EmbeddedDash() {
         >
           {needDateRange ? "Remove Date Range" : "Add Date Range"}
         </button>
+        If your embedded template have dynamic date range, please provide the
+        date range here. (Note. below will be ignored if the template does not
+        support dynamic date range).
         {needDateRange && (
           <div>
             from: <Datetime value={from} onChange={(val) => setFrom(val)} />
@@ -91,6 +87,13 @@ function EmbeddedDash() {
           </div>
         )}
       </div>
+      <br />
+      <button
+        disabled={!userId || (needDateRange && (!from || !to))}
+        onClick={load}
+      >
+        Load Embedded Dash
+      </button>
       {loading && <p>loading...</p>}
       {error && (
         <p>
@@ -101,13 +104,11 @@ function EmbeddedDash() {
       )}
       {dashEmbedInfo && (
         <div>
-          <h3>Step 2: Use the returned URI (with token) to load the sandboxed dash</h3>
-          <pre>
-            {JSON.stringify(dashEmbedInfo, null, "  ")}
-          </pre>
-          <EmbeddedDisplay
-            dashEmbedInfo={dashEmbedInfo}
-          />
+          <h3>
+            Step 2: Use the returned URI (with token) to load the sandboxed dash
+          </h3>
+          <pre>{JSON.stringify(dashEmbedInfo, null, "  ")}</pre>
+          <EmbeddedDisplay dashEmbedInfo={dashEmbedInfo} />
         </div>
       )}
     </div>
