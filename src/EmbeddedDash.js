@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "react-datetime/css/react-datetime.css";
 import Datetime from "react-datetime";
-import IFrameWrapper from "./EmbeddedDisplay";
+import EmbeddedDisplay from "./EmbeddedDisplay";
 
 
 function EmbeddedDash() {
@@ -104,7 +104,7 @@ function EmbeddedDash() {
               ? JSON.stringify(dashEmbedInfo, null, "  ")
               : "not found yet"}
           </pre>
-          <IFrameWrapper
+          <EmbeddedDisplay
             dashEmbedInfo={dashEmbedInfo}
           />
         </div>
