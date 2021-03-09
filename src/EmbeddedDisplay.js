@@ -30,10 +30,13 @@ export default function EmbeddedDisplay(props) {
   const [hideHeader, setHideHeader] = useState(false);
   const [lineValue, setLineValue] = useState(null);
   const [lineColor, setLineColor] = useState(null);
+  const [timeZone, setTimeZone] = useState(null);
 
-  const [finalUrl, setFinalUrl] = useState(
-    convertToLocalHost(dashEmbedInfo.url)
-  );
+  const [finalUrl, setFinalUrl] = useState(dashEmbedInfo.url);
+
+  // const [finalUrl, setFinalUrl] = useState(
+  //   convertToLocalHost(dashEmbedInfo.url)
+  // );
 
   return (
     <div>
@@ -44,7 +47,10 @@ export default function EmbeddedDisplay(props) {
       </button>
       {showEmbedOptions && (
         <React.Fragment>
-          <h3>Step 3 (optional): use query string to customize the embedded display options</h3>
+          <h3>
+            Step 3 (optional): use query string to customize the embedded
+            display options
+          </h3>
           primary_color:{" "}
           <input
             type="text"
@@ -72,11 +78,29 @@ export default function EmbeddedDisplay(props) {
             onChange={(evt) => setLineColor(evt.target.value)}
           />
           <br />
+          time zone (must be IANA timezone, most are supported, some rarely used
+          ones may not be supported by browsers). By default, browser timezone
+          is used, this allows you to override it.
+          <select
+            value={timeZone}
+            onChange={(evt) => {
+              const val = evt.target.value;
+              setTimeZone(val);
+            }}
+          >
+            <option value="America/Los_Angeles">America/Los_Angeles</option>
+            <option value="America/New_York">America/New_York</option>
+            <option value="Asia/Hong_Kong">Asia/Hong_Kong</option>
+            <option value="Europe/London">Europe/London</option>
+            <option value="UTC">UTC</option>
+          </select>
+          <br />
           <button
             onClick={() => {
               const queryObject = {
                 primary_color: primaryColor ? primaryColor : undefined,
                 hide_header: hideHeader ? true : undefined,
+                time_zone: timeZone ? timeZone : undefined,
                 drawing:
                   isNaN(lineValue) && !lineValue
                     ? undefined
@@ -89,9 +113,15 @@ export default function EmbeddedDisplay(props) {
               };
 
               const finalUrl =
-                convertToLocalHost(dashEmbedInfo.url) +
+                dashEmbedInfo.url +
                 "&" +
                 qs.stringify(queryObject, { arrayFormat: "indices" });
+
+
+              // const finalUrl =
+              //   convertToLocalHost(dashEmbedInfo.url) +
+              //   "&" +
+              //   qs.stringify(queryObject, { arrayFormat: "indices" });
 
               setFinalUrl(finalUrl);
             }}

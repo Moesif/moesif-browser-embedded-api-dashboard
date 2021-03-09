@@ -109,3 +109,8 @@ qs.stringify(queryParams, { format: 'index' });
 
 // and append to the embed url.
 ```
+
+### time_zone
+
+By default, the chart and times will be rendered in timezone of the browser. You can override that if needed. Most commonly IANA time zones are supported, although some rarely used IANA time zone may not be supported by all browser. If it is not a
+valid IANA timezone code or not supported, it will be ignored.
