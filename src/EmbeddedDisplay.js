@@ -30,7 +30,7 @@ export default function EmbeddedDisplay(props) {
   const [hideHeader, setHideHeader] = useState(false);
   const [lineValue, setLineValue] = useState(null);
   const [lineColor, setLineColor] = useState(null);
-  const [timeZone, setTimeZone] = useState(null);
+  const [timeZone, setTimeZone] = useState('');
 
   const [finalUrl, setFinalUrl] = useState(dashEmbedInfo.url);
 
@@ -88,6 +88,7 @@ export default function EmbeddedDisplay(props) {
               setTimeZone(val);
             }}
           >
+            <option value="">Browser Default</option>
             <option value="America/Los_Angeles">America/Los_Angeles</option>
             <option value="America/New_York">America/New_York</option>
             <option value="Asia/Hong_Kong">Asia/Hong_Kong</option>
