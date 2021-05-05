@@ -107,7 +107,7 @@ function EmbeddedDash() {
           <h3>
             Step 2: Use the returned URI (with token) to load the sandboxed dash
           </h3>
-          <pre>{JSON.stringify(dashEmbedInfo, null, "  ")}</pre>
+          <pre className='embed-info'>{JSON.stringify(dashEmbedInfo, null, "  ")}</pre>
           <EmbeddedDisplay dashEmbedInfo={dashEmbedInfo} />
         </div>
       )}
