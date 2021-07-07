@@ -30,7 +30,9 @@ export default function EmbeddedDisplay(props) {
   const [hideHeader, setHideHeader] = useState(false);
   const [lineValue, setLineValue] = useState(null);
   const [lineColor, setLineColor] = useState(null);
-  const [timeZone, setTimeZone] = useState('');
+  const [timeZone, setTimeZone] = useState("");
+  const [hideChartAxis, setChartAxis] = useState(false);
+  const [hideChartLegend, setChartLegend] = useState(false);
 
   const [finalUrl, setFinalUrl] = useState(dashEmbedInfo.url);
 
@@ -63,6 +65,20 @@ export default function EmbeddedDisplay(props) {
             type="checkbox"
             checked={hideHeader}
             onChange={(evt) => setHideHeader(!hideHeader)}
+          />
+          <br />
+          hide_chart_axis:{" "}
+          <input
+            type="checkbox"
+            checked={hideChartAxis}
+            onChange={(evt) => setChartAxis(!hideChartAxis)}
+          />
+          <br />
+          hide_chart_legend:{" "}
+          <input
+            type="checkbox"
+            checked={hideChartLegend}
+            onChange={(evt) => setChartLegend(!hideChartLegend)}
           />
           <br />
           Add a line to time series chart with value:{" "}
@@ -101,6 +117,8 @@ export default function EmbeddedDisplay(props) {
               const queryObject = {
                 primary_color: primaryColor ? primaryColor : undefined,
                 hide_header: hideHeader ? true : undefined,
+                hide_chart_axis: hideChartAxis ? true : undefined,
+                hide_chart_legend: hideChartLegend ? true : undefined,
                 time_zone: timeZone ? timeZone : undefined,
                 drawing:
                   isNaN(lineValue) && !lineValue
