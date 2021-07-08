@@ -31,7 +31,7 @@ export default function EmbeddedDisplay(props) {
   const [lineValue, setLineValue] = useState(null);
   const [lineColor, setLineColor] = useState(null);
   const [timeZone, setTimeZone] = useState("");
-  const [hideChartAxis, setChartAxis] = useState(false);
+  const [hideChartAxisLabel, setChartAxisLabel] = useState(false);
   const [hideChartLegend, setChartLegend] = useState(false);
 
   const [finalUrl, setFinalUrl] = useState(dashEmbedInfo.url);
@@ -67,11 +67,11 @@ export default function EmbeddedDisplay(props) {
             onChange={(evt) => setHideHeader(!hideHeader)}
           />
           <br />
-          hide_chart_axis:{" "}
+          hide_chart_axis_label:{" "}
           <input
             type="checkbox"
-            checked={hideChartAxis}
-            onChange={(evt) => setChartAxis(!hideChartAxis)}
+            checked={hideChartAxisLabel}
+            onChange={(evt) => setChartAxisLabel(!hideChartAxisLabel)}
           />
           <br />
           hide_chart_legend:{" "}
@@ -117,7 +117,7 @@ export default function EmbeddedDisplay(props) {
               const queryObject = {
                 primary_color: primaryColor ? primaryColor : undefined,
                 hide_header: hideHeader ? true : undefined,
-                hide_chart_axis: hideChartAxis ? true : undefined,
+                hide_chart_axis_label: hideChartAxisLabel ? true : undefined,
                 hide_chart_legend: hideChartLegend ? true : undefined,
                 time_zone: timeZone ? timeZone : undefined,
                 drawing:
