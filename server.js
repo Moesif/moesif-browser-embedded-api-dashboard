@@ -32,6 +32,7 @@ app.get("/embed-dash(/:userId)", function (req, res) {
   // customize the template fields for each one of your users
   // for example, here we configured so that API events
   // that are filtered by the user_id field.
+
   const templateData = {
     template: {
       values: {
@@ -40,8 +41,18 @@ app.get("/embed-dash(/:userId)", function (req, res) {
     },
   };
 
+  // below is required if the templated workspace has dynamic time range set to true.
+  // and from and to is the dateRange of events allowed in the Sandbox
+  const from = req.query.from;
+  const to = req.query.to;
+  // and from and to should be ISO timestamps if it is dynamic
+  if (from && to) {
+    templateData.template.from = from;
+    templateData.template.to = to;
+  }
+
   // Set your desired expiration for the generated workspace token.
-  // Moesif's recommendation is to match or be larger than your user's session time while keeping time period less than 30 days. 
+  // Moesif's recommendation is to match or be larger than your user's session time while keeping time period less than 30 days.
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
   const expiration = tomorrow.toISOString();
