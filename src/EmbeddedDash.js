@@ -6,7 +6,8 @@ function testLocalIfNeeded(url) {
   if (url) {
     return url
       .replace("https://web-dev.moesif.com", "http://localhost:8080")
-      .replace("embed=true", "embed=true&show_user_filters=false&primary_color=" + encodeURIComponent('#FFFFFF'));
+      .replace("https://www.moesif.com", 'http://localhost:8080')
+      // .replace("embed=true", "embed=true&show_user_filters=false&primary_color=" + encodeURIComponent('#FFFFFF'));
   }
   return url;
 }
