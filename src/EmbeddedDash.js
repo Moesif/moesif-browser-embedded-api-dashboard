@@ -3,17 +3,6 @@ import "react-datetime/css/react-datetime.css";
 import Datetime from "react-datetime";
 import EmbeddedDisplay from "./EmbeddedDisplay";
 
-function testLocalIfNeeded(url) {
-  // this helper function is for us to redirect to localhost:8080
-  // and add various url parameters.
-  if (url) {
-    return url
-      .replace("https://web-dev.moesif.com", "http://localhost:8080")
-      .replace("https://www.moesif.com", 'http://localhost:8080')
-      // .replace("embed=true", "embed=true&show_user_filters=false&primary_color=" + encodeURIComponent('#FFFFFF'));
-  }
-  return url;
-}
 
 function EmbeddedDash() {
   const [dashEmbedInfo, setEmbedInfo] = useState(null);
@@ -46,6 +35,8 @@ function EmbeddedDash() {
 
     setLoading(true);
     setError(null);
+
+    setEmbedInfo(null);
 
     fetch(url)
       .then((response) => {
