@@ -29,6 +29,12 @@ steps:
     secureFile: 'text-image-service.production.env'
     retryCount: 5
 
+- task: KirKone.fileoperations.rename.rename@0
+  displayName: 'rename: text-image-service.production.env'
+  inputs:
+    SourceFile: 'text-image-service.production.env'
+    NewName: .env.production
+
 - task: CopyFiles@2
   displayName: 'Copy .env file'
   inputs:
@@ -36,11 +42,7 @@ steps:
     Contents: '*.production.env'
     TargetFolder: .
 
-- task: KirKone.fileoperations.rename.rename@0
-  displayName: 'rename: text-image-service.production.env'
-  inputs:
-    SourceFile: 'text-image-service.production.env'
-    NewName: .env.production
+
 
 - task: Npm@0
   displayName: 'npm install'
