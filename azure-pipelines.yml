@@ -27,7 +27,7 @@ steps:
   displayName: 'Download secure file'
   inputs:
     secureFile: 'text-image-service.production.env'
-    retryCount: 
+    retryCount: 5
 
 - task: CopyFiles@2
   displayName: 'Copy .env file'
