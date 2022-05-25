@@ -1,0 +1,60 @@
+# Node.js
+# Build a general Node.js project with npm.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+trigger:
+- master
+
+pool:
+  vmImage: windows-2019
+
+steps:
+- task: NodeTool@0
+  displayName: 'Install Node.js'
+  inputs:
+    versionSpec: '14.x'
+  
+
+- script: |
+    which node > node.txt
+    set /p nodepath= < node.txt
+    mkdir nodejs
+    cp "%nodepath%" nodejs/node.exe
+    rm node.txt
+    rm production.env   
+  displayName: 'Copy node.exe to target'
+
+
+- task: Npm@0
+  displayName: 'npm install'
+  inputs:
+    arguments: '--force --production=false'
+
+- task: DeleteFiles@1
+  displayName: 'Delete build files'
+  inputs:
+    SourceFolder: '$(System.DefaultWorkingDirectory)'
+    Contents: |
+     **/node-sass/build/*
+     **/.git/*
+
+- task: ArchiveFiles@1
+  displayName: 'Archive files '
+  inputs:
+    rootFolder: '$(System.DefaultWorkingDirectory)'
+    includeRootFolder: false
+    archiveType: tar
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).tar.gz'
+
+- task: CopyFiles@2
+  displayName: 'Copy File to: $(TargetFolder)'
+  inputs:
+    SourceFolder: '$(Build.ArtifactStagingDirectory)'
+    Contents: '$(Build.BuildId).tar.gz'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)\ArtifactsToBePublished'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: drop'
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)\ArtifactsToBePublished'
