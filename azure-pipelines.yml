@@ -26,7 +26,7 @@ steps:
 - task: DownloadSecureFile@1
   displayName: 'Download secure file'
   inputs:
-    secureFile: 'text-image-service.production.env'
+    secureFile: 'embedded_demo.env'
     retryCount: 5
 
 - task: CopyFiles@2
@@ -37,10 +37,10 @@ steps:
     TargetFolder: .
 
 - task: KirKone.fileoperations.rename.rename@0
-  displayName: 'rename: text-image-service.production.env'
+  displayName: 'rename: embedded_demo.env'
   inputs:
-    SourceFile: 'text-image-service.production.env'
-    NewName: 'production.env'
+    SourceFile: 'embedded_demo.env'
+    NewName: '.env'
 
 - task: Npm@0
   displayName: 'npm install'
