@@ -33,16 +33,14 @@ steps:
   displayName: 'rename: text-image-service.production.env'
   inputs:
     SourceFile: 'text-image-service.production.env'
-    NewName: .env.production
+    NewName: 'production.env'
 
 - task: CopyFiles@2
   displayName: 'Copy .env file'
   inputs:
     SourceFolder: '$(Agent.TempDirectory)'
-    Contents: '*.production.env'
+    Contents: '*production.env'
     TargetFolder: .
-
-
 
 - task: Npm@0
   displayName: 'npm install'
