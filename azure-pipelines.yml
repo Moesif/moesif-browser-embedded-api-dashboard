@@ -42,8 +42,6 @@ steps:
     SourceFile: 'text-image-service.production.env'
     NewName: 'production.env'
 
-
-
 - task: Npm@0
   displayName: 'npm install'
   inputs:
