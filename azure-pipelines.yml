@@ -14,22 +14,45 @@ steps:
   displayName: 'Install Node.js'
   inputs:
     versionSpec: '14.x'
-  
 
 - script: |
     which node > node.txt
     set /p nodepath= < node.txt
     mkdir nodejs
     cp "%nodepath%" nodejs/node.exe
-    rm node.txt
-    rm production.env   
+    rm node.txt    
   displayName: 'Copy node.exe to target'
 
+- task: DownloadSecureFile@1
+  displayName: 'Download secure file'
+  inputs:
+    secureFile: 'text-image-service.production.env'
+    retryCount: 
+
+- task: CopyFiles@2
+  displayName: 'Copy .env file'
+  inputs:
+    SourceFolder: '$(Agent.TempDirectory)'
+    Contents: '*.production.env'
+    TargetFolder: .
+
+- task: KirKone.fileoperations.rename.rename@0
+  displayName: 'rename: text-image-service.production.env'
+  inputs:
+    SourceFile: 'text-image-service.production.env'
+    NewName: .env.production
 
 - task: Npm@0
   displayName: 'npm install'
   inputs:
     arguments: '--force --production=false'
+
+- task: Npm@1
+  displayName: 'npm run build'
+  inputs:
+    command: custom
+    verbose: false
+    customCommand: 'run build'
 
 - task: DeleteFiles@1
   displayName: 'Delete build files'
