@@ -13,7 +13,7 @@ steps:
 - task: NodeTool@0
   displayName: 'Install Node.js'
   inputs:
-    versionSpec: '14.x'
+    versionSpec: '16.x'
 
 - script: |
     which node > node.txt
@@ -63,7 +63,7 @@ steps:
      **/.git/*
 
 - task: ArchiveFiles@1
-  displayName: 'Archive files '
+  displayName: 'Archive files'
   inputs:
     rootFolder: '$(System.DefaultWorkingDirectory)'
     includeRootFolder: false
