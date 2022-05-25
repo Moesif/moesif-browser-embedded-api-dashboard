@@ -35,6 +35,8 @@ function EmbeddedDash() {
     setLoading(true);
     setError(null);
 
+    setEmbedInfo(null);
+
     fetch(url)
       .then((response) => {
         if (response.ok) {
