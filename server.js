@@ -1,9 +1,12 @@
-const dotenv = require("dotenv");
-dotenv.config();
-const express = require("express");
-const path = require("path");
-const fetch = require("node-fetch");
+import dotenv from "dotenv";
+import express from "express";
+import path from "path";
+import fetch from "node-fetch";
 const app = express();
+
+dotenv.config();
+
+const __dirname = path.resolve();
 app.use(express.static(path.join(__dirname, "build")));
 
 const moesifManagementToken = process.env.MOESIF_MANAGEMENT_TOKEN;
