@@ -6,6 +6,7 @@ const app = express();
 
 dotenv.config();
 
+// https://stackoverflow.com/questions/8817423/why-is-dirname-not-defined-in-node-repl
 const __dirname = path.resolve();
 app.use(express.static(path.join(__dirname, "build")));
 
