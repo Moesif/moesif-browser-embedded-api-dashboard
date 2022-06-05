@@ -13,6 +13,10 @@ function IFrameWrapper({ embedUrl }) {
   );
 }
 
+// this is flag for Moesif Team Members to running embedded dash against a
+// a locally running instance of main web portal
+const USE_LOCAL_HOST = false;
+
 function convertToLocalHost(url) {
   // this helper function is for us to redirect to localhost:8080
   // and add various url parameters.
@@ -40,11 +44,9 @@ export default function EmbeddedDisplay(props) {
   const [chartLabelFontSize, setChartLabelFontSize] = useState(undefined);
   const [chartFontColor, setChartFontColor] = useState(undefined);
 
-  const [finalUrl, setFinalUrl] = useState(dashEmbedInfo.url);
-
-  // const [finalUrl, setFinalUrl] = useState(
-  //   convertToLocalHost(dashEmbedInfo.url)
-  // );
+  const [finalUrl, setFinalUrl] = useState(
+    USE_LOCAL_HOST ? convertToLocalHost(dashEmbedInfo.url) : dashEmbedInfo.url
+  );
 
   return (
     <div>
@@ -186,20 +188,18 @@ export default function EmbeddedDisplay(props) {
                         value: lineValue,
                         name: "test",
                         borderColor: lineColor || "rgba(255, 51, 181, 0.3)",
-                        backgroundColor: lineColor || "rgba(255, 51, 181, 0.3)",
-                      },
+                        backgroundColor: lineColor || "rgba(255, 51, 181, 0.3)"
+                      }
               };
 
+              const url = USE_LOCAL_HOST
+                ? convertToLocalHost(dashEmbedInfo.url)
+                : dashEmbedInfo.url;
+
               const finalUrl =
-                dashEmbedInfo.url +
+                url +
                 "&" +
                 qs.stringify(queryObject, { arrayFormat: "indices" });
-
-
-              // const finalUrl =
-              //   convertToLocalHost(dashEmbedInfo.url) +
-              //   "&" +
-              //   qs.stringify(queryObject, { arrayFormat: "indices" });
 
               setFinalUrl(finalUrl);
             }}
