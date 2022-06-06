@@ -21,7 +21,7 @@ function convertToLocalHost(url) {
   // this helper function is for us to redirect to localhost:8080
   // and add various url parameters.
   if (url) {
-    return url.replace("https://web-dev.moesif.com", "http://localhost:8080").replace("https://www.moesif.com", "http://localhost:8080");;
+    return url.replace("https://web-dev.moesif.com", "http://localhost:8080").replace("https://www.moesif.com", "http://localhost:8080");
   }
   return url;
 }
