@@ -15,7 +15,7 @@ function IFrameWrapper({ embedUrl }) {
 
 // this is flag for Moesif Team Members to running embedded dash against a
 // a locally running instance of main web portal
-const USE_LOCAL_HOST = true;
+const USE_LOCAL_HOST = false;
 
 function convertToLocalHost(url) {
   // this helper function is for us to redirect to localhost:8080
