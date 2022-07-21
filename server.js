@@ -40,9 +40,10 @@ app.get("/embed-dash(/:userId)", function (req, res) {
   const templateData = {
     template: {
       values: {
-        user_id: userId,
-      },
-    },
+        company_id: userId,
+        'metadata.environment': 'Production'
+      }
+    }
   };
 
   // below is required if the templated workspace has dynamic time range set to true.
@@ -61,19 +62,23 @@ app.get("/embed-dash(/:userId)", function (req, res) {
   tomorrow.setDate(tomorrow.getDate() + 1);
   const expiration = tomorrow.toISOString();
 
+  const finalApiEndPoint = moesifApiEndPoint.endsWith("/api")
+    ? moesifApiEndPoint + "/portal/~/workspaces/"
+    : moesifApiEndPoint + "/v1/portal/~/workspaces/";
+
   fetch(
-    moesifApiEndPoint +
-      "/v1/portal/~/workspaces/" +
+    finalApiEndPoint +
       templateWorkspaceId +
       "/access_token" +
-      "?expiration=" + expiration,
+      "?expiration=" +
+      expiration,
     {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + moesifManagementToken,
+        Authorization: "Bearer " + moesifManagementToken
       },
-      body: JSON.stringify(templateData),
+      body: JSON.stringify(templateData)
     }
   )
     .then((response) => {
@@ -93,11 +98,10 @@ app.get("/embed-dash(/:userId)", function (req, res) {
     })
     .catch((err) => {
       res.status(500).send({
-        error: "something wrong",
+        error: "something wrong"
       });
     });
 });
-
 
 app.get("/", function (req, res) {
   res.sendFile(path.join(__dirname, "build", "index.html"));
