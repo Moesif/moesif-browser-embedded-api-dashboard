@@ -15,7 +15,7 @@ function IFrameWrapper({ embedUrl }) {
 
 // this is flag for Moesif Team Members to running embedded dash against a
 // a locally running instance of main web portal
-const USE_LOCAL_HOST = false;
+const USE_LOCAL_HOST = true;
 
 function convertToLocalHost(url) {
   // this helper function is for us to redirect to localhost:8080
@@ -33,6 +33,7 @@ export default function EmbeddedDisplay(props) {
 
   const [showEmbedOptions, setShowEmbedOptions] = useState(false);
   const [primaryColor, setPrimaryColor] = useState(undefined);
+  const [colorArray, setColorArray] = useState(undefined);
   const [hideHeader, setHideHeader] = useState(false);
   const [lineValue, setLineValue] = useState(null);
   const [lineColor, setLineColor] = useState(null);
@@ -70,6 +71,13 @@ export default function EmbeddedDisplay(props) {
             onChange={(evt) => setPrimaryColor(evt.target.value)}
           />
           <br />
+          color_array (comma separated):{" "}
+          <input
+            type="text"
+            value={colorArray}
+            onChange={(evt) => setColorArray(evt.target.value)}
+          />
+          <br />
           hide_header:{" "}
           <input
             type="checkbox"
@@ -103,6 +111,7 @@ export default function EmbeddedDisplay(props) {
             <option value="America/New_York">America/New_York</option>
             <option value="Asia/Hong_Kong">Asia/Hong_Kong</option>
             <option value="Europe/London">Europe/London</option>
+            <option value="Pacific/Apia">Pacific/Apia</option>
             <option value="UTC">UTC</option>
           </select>
           <br />
@@ -173,6 +182,7 @@ export default function EmbeddedDisplay(props) {
             onClick={() => {
               const queryObject = {
                 primary_color: primaryColor ? primaryColor : undefined,
+                color_array: colorArray ? colorArray : undefined,
                 hide_header: hideHeader ? true : undefined,
                 hide_chart_axis_label: hideChartAxisLabel ? true : undefined,
                 hide_chart_legend: hideChartLegend ? true : undefined,
@@ -201,7 +211,7 @@ export default function EmbeddedDisplay(props) {
               const finalUrl =
                 url +
                 "&" +
-                qs.stringify(queryObject, { arrayFormat: "indices" });
+                qs.stringify(queryObject, { arrayFormat: "indices", skipNulls: true });
 
               setFinalUrl(finalUrl);
             }}
@@ -212,6 +222,7 @@ export default function EmbeddedDisplay(props) {
         </React.Fragment>
       )}
       <hr />
+      <pre>{finalUrl}</pre>
       <IFrameWrapper key={finalUrl} embedUrl={finalUrl} />
     </div>
   );
