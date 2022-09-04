@@ -17,15 +17,26 @@ function IFrameWrapper({ embedUrl }) {
 // a locally running instance of main web portal
 const USE_LOCAL_HOST = false;
 
-function convertToLocalHost(url) {
-  // this helper function is for us to redirect to localhost:8080
-  // and add various url parameters.
-  if (url) {
-    return url
-      .replace("https://web-dev.moesif.com", "http://localhost:8080")
-      .replace("https://www.moesif.com", "http://localhost:8080");
+function getIFrameUrl(embedInfo, queryParams={}) {
+  let host;
+  if (USE_LOCAL_HOST) {
+    // for local testing.
+    host = "http://localhost:8080";
+  } else if (embedInfo.url.indexOf("https://web-dev.moesif.com") >=0 ) {
+    host = "https://web-dev.moesif.com"
+  } else {
+    host = "https://www.moesif.com"
   }
-  return url;
+
+  const queryObject = {
+    ...queryParams,
+    embed: true,
+  }
+
+  const queryString = qs.stringify(queryObject, { arrayFormat: "indices", skipNulls: true });
+
+  // Please NOTE this is the recommended URL scheme.
+  return `${host}/public/em/ws/${embedInfo._id}?${queryString}#${embedInfo.token}`;
 }
 
 export default function EmbeddedDisplay(props) {
@@ -47,9 +58,7 @@ export default function EmbeddedDisplay(props) {
   const [chartLabelFontSize, setChartLabelFontSize] = useState(undefined);
   const [chartFontColor, setChartFontColor] = useState(undefined);
 
-  const [finalUrl, setFinalUrl] = useState(
-    USE_LOCAL_HOST ? convertToLocalHost(dashEmbedInfo.url) : dashEmbedInfo.url
-  );
+  const [finalUrl, setFinalUrl] = useState(getIFrameUrl(dashEmbedInfo));
 
   return (
     <div>
@@ -204,16 +213,7 @@ export default function EmbeddedDisplay(props) {
                       }
               };
 
-              const url = USE_LOCAL_HOST
-                ? convertToLocalHost(dashEmbedInfo.url)
-                : dashEmbedInfo.url;
-
-              const finalUrl =
-                url +
-                "&" +
-                qs.stringify(queryObject, { arrayFormat: "indices", skipNulls: true });
-
-              setFinalUrl(finalUrl);
+              setFinalUrl(getIFrameUrl(dashEmbedInfo, queryObject));
             }}
           >
             Update Query Params and Reload

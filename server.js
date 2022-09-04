@@ -40,8 +40,9 @@ app.get("/embed-dash(/:userId)", function (req, res) {
   const templateData = {
     template: {
       values: {
-        company_id: userId,
-        'metadata.environment': 'Production'
+        user_id: userId
+        //  your template worksplace may have
+        // other dynamic fields. All dynamic fields will be required to be flled here.
       }
     }
   };
@@ -59,34 +60,39 @@ app.get("/embed-dash(/:userId)", function (req, res) {
   // Set your desired expiration for the generated workspace token.
   // Moesif's recommendation is to match or be larger than your user's session time while keeping time period less than 30 days.
   const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
+  tomorrow.setDate(tomorrow.getDate() + 3);
   const expiration = tomorrow.toISOString();
+
+  console.log(
+    `now requests access token for template workspace ${templateWorkspaceId}, setting the expiration to ${expiration}`
+  );
 
   const finalApiEndPoint = moesifApiEndPoint.endsWith("/api")
     ? moesifApiEndPoint + "/portal/~/workspaces/"
     : moesifApiEndPoint + "/v1/portal/~/workspaces/";
 
-  fetch(
+  const finalUrl =
     finalApiEndPoint +
-      templateWorkspaceId +
-      "/access_token" +
-      "?expiration=" +
-      expiration,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + moesifManagementToken
-      },
-      body: JSON.stringify(templateData)
-    }
-  )
+    templateWorkspaceId +
+    "/access_token" +
+    "?expiration=" +
+    expiration;
+
+  fetch(finalUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + moesifManagementToken
+    },
+    body: JSON.stringify(templateData)
+  })
     .then((response) => {
       if (response.ok) {
         return response;
       } else {
         console.log("Api call to moesif not successful. sever response is");
         console.error(response.statusText);
+        console.log(response);
         throw Error(response.statusText);
       }
     })
@@ -94,9 +100,11 @@ app.get("/embed-dash(/:userId)", function (req, res) {
       return response.json();
     })
     .then((info) => {
+      console.log(`got token back sending back to frontend`);
       res.json(info);
     })
     .catch((err) => {
+      console.log(err);
       res.status(500).send({
         error: "something wrong"
       });
