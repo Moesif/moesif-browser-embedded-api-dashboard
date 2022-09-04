@@ -60,7 +60,7 @@ app.get("/embed-dash(/:userId)", function (req, res) {
   // Set your desired expiration for the generated workspace token.
   // Moesif's recommendation is to match or be larger than your user's session time while keeping time period less than 30 days.
   const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 3);
+  tomorrow.setDate(tomorrow.getDate() + 1);
   const expiration = tomorrow.toISOString();
 
   console.log(
