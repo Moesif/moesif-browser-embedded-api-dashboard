@@ -48,6 +48,23 @@ MOESIF_TEMPLATE_WORKSPACE_ID=YOUR_TEMPLATE_WORKSPACE_ID
 To see the react version go to `http://localhost:3000`
 To see the non react version go to `http://localhost:3000/non-react-example`;
 
+## Note about the URL
+
+when you get the embedInfo back from moesif `access_token` api endpoint it should be in this
+```
+embedInfo = {
+   _id: 'XXXX',
+   token: 'xxxxx',
+   url: 'XXXXX',
+};
+```
+
+While the url in the return would work, the recommended url format is below if you displayOptions makes the query string very long.
+
+```
+finalUrl = `https://www.moesif.com/public/em/ws/${embedInfo._id}?${queryStringOfDisplayOptions}#${embedInfo.token}`
+```
+
 ## Display Options
 
 There are URL parameters you can add to the final iFrame page to customize the look.

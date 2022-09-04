@@ -13,13 +13,30 @@ function IFrameWrapper({ embedUrl }) {
   );
 }
 
-function convertToLocalHost(url) {
-  // this helper function is for us to redirect to localhost:8080
-  // and add various url parameters.
-  if (url) {
-    return url.replace("https://web-dev.moesif.com", "http://localhost:8080");
+// this is flag for Moesif Team Members to running embedded dash against a
+// a locally running instance of main web portal
+const USE_LOCAL_HOST = false;
+
+function getIFrameUrl(embedInfo, queryParams={}) {
+  let host;
+  if (USE_LOCAL_HOST) {
+    // for local testing.
+    host = "http://localhost:8080";
+  } else if (embedInfo.url.indexOf("https://web-dev.moesif.com") >=0 ) {
+    host = "https://web-dev.moesif.com"
+  } else {
+    host = "https://www.moesif.com"
   }
-  return url;
+
+  const queryObject = {
+    ...queryParams,
+    embed: true,
+  }
+
+  const queryString = qs.stringify(queryObject, { arrayFormat: "indices", skipNulls: true });
+
+  // Please NOTE this is the recommended URL scheme.
+  return `${host}/public/em/ws/${embedInfo._id}?${queryString}#${embedInfo.token}`;
 }
 
 export default function EmbeddedDisplay(props) {
@@ -27,6 +44,7 @@ export default function EmbeddedDisplay(props) {
 
   const [showEmbedOptions, setShowEmbedOptions] = useState(false);
   const [primaryColor, setPrimaryColor] = useState(undefined);
+  const [colorArray, setColorArray] = useState(undefined);
   const [hideHeader, setHideHeader] = useState(false);
   const [lineValue, setLineValue] = useState(null);
   const [lineColor, setLineColor] = useState(null);
@@ -40,11 +58,7 @@ export default function EmbeddedDisplay(props) {
   const [chartLabelFontSize, setChartLabelFontSize] = useState(undefined);
   const [chartFontColor, setChartFontColor] = useState(undefined);
 
-  const [finalUrl, setFinalUrl] = useState(dashEmbedInfo.url);
-
-  // const [finalUrl, setFinalUrl] = useState(
-  //   convertToLocalHost(dashEmbedInfo.url)
-  // );
+  const [finalUrl, setFinalUrl] = useState(getIFrameUrl(dashEmbedInfo));
 
   return (
     <div>
@@ -64,6 +78,13 @@ export default function EmbeddedDisplay(props) {
             type="text"
             value={primaryColor}
             onChange={(evt) => setPrimaryColor(evt.target.value)}
+          />
+          <br />
+          color_array (comma separated):{" "}
+          <input
+            type="text"
+            value={colorArray}
+            onChange={(evt) => setColorArray(evt.target.value)}
           />
           <br />
           hide_header:{" "}
@@ -99,6 +120,7 @@ export default function EmbeddedDisplay(props) {
             <option value="America/New_York">America/New_York</option>
             <option value="Asia/Hong_Kong">Asia/Hong_Kong</option>
             <option value="Europe/London">Europe/London</option>
+            <option value="Pacific/Apia">Pacific/Apia</option>
             <option value="UTC">UTC</option>
           </select>
           <br />
@@ -169,6 +191,7 @@ export default function EmbeddedDisplay(props) {
             onClick={() => {
               const queryObject = {
                 primary_color: primaryColor ? primaryColor : undefined,
+                color_array: colorArray ? colorArray : undefined,
                 hide_header: hideHeader ? true : undefined,
                 hide_chart_axis_label: hideChartAxisLabel ? true : undefined,
                 hide_chart_legend: hideChartLegend ? true : undefined,
@@ -186,22 +209,11 @@ export default function EmbeddedDisplay(props) {
                         value: lineValue,
                         name: "test",
                         borderColor: lineColor || "rgba(255, 51, 181, 0.3)",
-                        backgroundColor: lineColor || "rgba(255, 51, 181, 0.3)",
-                      },
+                        backgroundColor: lineColor || "rgba(255, 51, 181, 0.3)"
+                      }
               };
 
-              const finalUrl =
-                dashEmbedInfo.url +
-                "&" +
-                qs.stringify(queryObject, { arrayFormat: "indices" });
-
-
-              // const finalUrl =
-              //   convertToLocalHost(dashEmbedInfo.url) +
-              //   "&" +
-              //   qs.stringify(queryObject, { arrayFormat: "indices" });
-
-              setFinalUrl(finalUrl);
+              setFinalUrl(getIFrameUrl(dashEmbedInfo, queryObject));
             }}
           >
             Update Query Params and Reload
@@ -210,6 +222,7 @@ export default function EmbeddedDisplay(props) {
         </React.Fragment>
       )}
       <hr />
+      <pre>{finalUrl}</pre>
       <IFrameWrapper key={finalUrl} embedUrl={finalUrl} />
     </div>
   );

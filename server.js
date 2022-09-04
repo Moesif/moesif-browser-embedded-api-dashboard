@@ -40,9 +40,11 @@ app.get("/embed-dash(/:userId)", function (req, res) {
   const templateData = {
     template: {
       values: {
-        user_id: userId,
-      },
-    },
+        user_id: userId
+        //  your template worksplace may have
+        // other dynamic fields. All dynamic fields will be required to be flled here.
+      }
+    }
   };
 
   // below is required if the templated workspace has dynamic time range set to true.
@@ -61,27 +63,36 @@ app.get("/embed-dash(/:userId)", function (req, res) {
   tomorrow.setDate(tomorrow.getDate() + 1);
   const expiration = tomorrow.toISOString();
 
-  fetch(
-    moesifApiEndPoint +
-      "/v1/portal/~/workspaces/" +
-      templateWorkspaceId +
-      "/access_token" +
-      "?expiration=" + expiration,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + moesifManagementToken,
-      },
-      body: JSON.stringify(templateData),
-    }
-  )
+  console.log(
+    `now requests access token for template workspace ${templateWorkspaceId}, setting the expiration to ${expiration}`
+  );
+
+  const finalApiEndPoint = moesifApiEndPoint.endsWith("/api")
+    ? moesifApiEndPoint + "/portal/~/workspaces/"
+    : moesifApiEndPoint + "/v1/portal/~/workspaces/";
+
+  const finalUrl =
+    finalApiEndPoint +
+    templateWorkspaceId +
+    "/access_token" +
+    "?expiration=" +
+    expiration;
+
+  fetch(finalUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + moesifManagementToken
+    },
+    body: JSON.stringify(templateData)
+  })
     .then((response) => {
       if (response.ok) {
         return response;
       } else {
         console.log("Api call to moesif not successful. sever response is");
         console.error(response.statusText);
+        console.log(response);
         throw Error(response.statusText);
       }
     })
@@ -89,15 +100,16 @@ app.get("/embed-dash(/:userId)", function (req, res) {
       return response.json();
     })
     .then((info) => {
+      console.log(`got token back sending back to frontend`);
       res.json(info);
     })
     .catch((err) => {
+      console.log(err);
       res.status(500).send({
-        error: "something wrong",
+        error: "something wrong"
       });
     });
 });
-
 
 app.get("/", function (req, res) {
   res.sendFile(path.join(__dirname, "build", "index.html"));
