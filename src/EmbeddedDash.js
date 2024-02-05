@@ -80,7 +80,7 @@ function EmbeddedDash() {
           {needDateRange ? "Remove Date Range" : "Add Date Range"}
         </button>
         If your embedded template have variable date range configured, then
-        date range (UTC time) must be provided. (Note. below will be ignored if the template does not
+        date range (UTC time) must be provided. (Note: below will be ignored if the template does not
         have dynamic date configured).
         {needDateRange && (
           <div>
@@ -107,7 +107,7 @@ function EmbeddedDash() {
       {dashEmbedInfo && (
         <div>
           <h3>
-            Step 2: Use the returned URI (with token) to load the sandboxed dash
+            Step 2: Use the returned URI (with token) to load the sandboxed dashboard
           </h3>
           <pre className='embed-info'>{JSON.stringify(dashEmbedInfo, null, "  ")}</pre>
           <EmbeddedDisplay dashEmbedInfo={dashEmbedInfo} />

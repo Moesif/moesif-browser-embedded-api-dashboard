@@ -13,7 +13,7 @@ function IFrameWrapper({ embedUrl }) {
   );
 }
 
-// this is flag for Moesif Team Members to running embedded dash against a
+// this is flag for Moesif Team Members to run an embedded dash against
 // a locally running instance of main web portal
 const USE_LOCAL_HOST = false;
 
