@@ -32,8 +32,7 @@ app.get("/embed-dash(/:userId)", function (req, res) {
   const userId = req.params.userId;
   // be sure to authenticate your user here.
   // for purpose of this example, do not do any user authentication.
-  // Here you want
-  // customize the template fields for each one of your users
+  // Here you want to customize the template fields for each one of your users.
   // for example, here we configured so that API events
   // that are filtered by the user_id field.
 
@@ -41,8 +40,8 @@ app.get("/embed-dash(/:userId)", function (req, res) {
     template: {
       values: {
         user_id: userId
-        //  your template worksplace may have
-        // other dynamic fields. All dynamic fields will be required to be flled here.
+        //  your template workspace may have
+        // other dynamic fields. All dynamic fields will be required to be filled here.
       }
     }
   };
