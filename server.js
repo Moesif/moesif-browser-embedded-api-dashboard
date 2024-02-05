@@ -40,10 +40,15 @@ app.get("/embed-dash(/:userId)", function (req, res) {
   const templateData = {
     template: {
       values: {
-        user_id: userId
-        //  your template worksplace may have
-        // other dynamic fields. All dynamic fields will be required to be flled here.
-      }
+
+        user_id: userId,
+        // company_id: '125:14',
+        // "request.verb": 'GET',
+        //  your template workspace may have
+        // other dynamic fields. All dynamic fields will be required to be filled here.
+      },
+      //  "from": "2023-10-10T02:52:39Z",
+      //  "to": "2023-10-18T02:52:39Z"
     }
   };
 
@@ -60,7 +65,7 @@ app.get("/embed-dash(/:userId)", function (req, res) {
   // Set your desired expiration for the generated workspace token.
   // Moesif's recommendation is to match or be larger than your user's session time while keeping time period less than 30 days.
   const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
+  tomorrow.setSeconds(tomorrow.getSeconds() + 60 * 60 * 24);
   const expiration = tomorrow.toISOString();
 
   console.log(
@@ -115,4 +120,10 @@ app.get("/", function (req, res) {
   res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 
-app.listen(process.env.PORT || 3050);
+app.listen(process.env.PORT || 3050, (err) => {
+  if (!err) {
+    console.log(`server listens no ${process.env.PORT || 3050}`);
+  } else {
+    console.error(err);
+  }
+});

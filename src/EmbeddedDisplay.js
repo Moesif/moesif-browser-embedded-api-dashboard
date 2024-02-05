@@ -15,7 +15,7 @@ function IFrameWrapper({ embedUrl }) {
 
 // this is flag for Moesif Team Members to running embedded dash against a
 // a locally running instance of main web portal
-const USE_LOCAL_HOST = false;
+const USE_LOCAL_HOST = true;
 
 function getIFrameUrl(embedInfo, queryParams={}) {
   let host;
