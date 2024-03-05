@@ -8,7 +8,7 @@ dotenv.config();
 
 // https://stackoverflow.com/questions/8817423/why-is-dirname-not-defined-in-node-repl
 const __dirname = path.resolve();
-app.use(express.static(path.join(__dirname, "build")));
+app.use(express.static(path.join(__dirname, "public")));
 
 const moesifManagementToken = process.env.MOESIF_MANAGEMENT_TOKEN;
 const templateWorkspaceId = process.env.MOESIF_TEMPLATE_WORKSPACE_ID;
@@ -111,7 +111,7 @@ app.get("/embed-dash(/:userId)", function (req, res) {
 });
 
 app.get("/", function (req, res) {
-  res.sendFile(path.join(__dirname, "build", "index.html"));
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
 app.listen(process.env.PORT || 3050);

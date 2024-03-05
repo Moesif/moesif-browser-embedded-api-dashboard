@@ -1,7 +1,7 @@
 import React from "react";
 // import logo from "./logo.svg";
 import "./App.css";
-import EmbeddedDash from "./EmbeddedDash";
+import EmbeddedDash from "./EmbeddedDash.js";
 
 function App() {
   return (
