@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "react-datetime/css/react-datetime.css";
 import Datetime from "react-datetime";
-import EmbeddedDisplay from "./EmbeddedDisplay";
+import EmbeddedDisplay from "./EmbeddedDisplay.js";
 
 function EmbeddedDash() {
   const [dashEmbedInfo, setEmbedInfo] = useState(null);
