@@ -1,14 +1,15 @@
-import dotenv from "dotenv";
-import express from "express";
-import path from "path";
-import fetch from "node-fetch";
+const dotenv = require("dotenv");
+const express = require("express");
+const path = require("path");
+const fetch = require("node-fetch");
+
 const app = express();
 
 dotenv.config();
 
 // https://stackoverflow.com/questions/8817423/why-is-dirname-not-defined-in-node-repl
-const __dirname = path.resolve();
-app.use(express.static(path.join(__dirname, "build")));
+const dirname = path.resolve();
+app.use(express.static(path.join(dirname, "build")));
 
 const moesifManagementToken = process.env.MOESIF_MANAGEMENT_TOKEN;
 const templateWorkspaceId = process.env.MOESIF_TEMPLATE_WORKSPACE_ID;
@@ -63,7 +64,7 @@ app.get("/embed-dash(/:userId)", function (req, res) {
   const expiration = tomorrow.toISOString();
 
   console.log(
-    `now requests access token for template workspace ${templateWorkspaceId}, setting the expiration to ${expiration}`
+    `now requests access token for template workspace ${templateWorkspaceId}, setting the expiration to ${expiration} with templateData as ${JSON.stringify(templateData)}`
   );
 
   const finalApiEndPoint = moesifApiEndPoint.endsWith("/api")
@@ -76,6 +77,8 @@ app.get("/embed-dash(/:userId)", function (req, res) {
     "/access_token" +
     "?expiration=" +
     expiration;
+
+  console.log('finalUrl: ' + finalUrl);
 
   fetch(finalUrl, {
     method: "POST",
