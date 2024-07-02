@@ -40,6 +40,19 @@ MOESIF_MANAGEMENT_TOKEN=YOUR_MANAGEMENT_TOKEN
 MOESIF_TEMPLATE_WORKSPACE_ID=YOUR_TEMPLATE_WORKSPACE_ID
 ```
 
+Optional Environment Variable:
+```
+MOESIF_API_ENDPOINT=https://api.moesif.com
+```
+
+If not defined, it will default to `https://api.moesif.com`.
+
+If you are using a proxy (for example: [Moesif Secure Proxy](https://www.moesif.com/docs/platform/secure-proxy/), please add below:
+
+```
+MOESIF_API_ENDPOINT=https://[HOSTOFYOURPROXY]/api
+```
+
 ### 3. Run the app
 
 - Run `node server.js` to start the server.
