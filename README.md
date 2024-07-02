@@ -47,7 +47,7 @@ MOESIF_API_ENDPOINT=https://api.moesif.com
 
 If not defined, it will default to `https://api.moesif.com`.
 
-If you are using a proxy (for example: [Moesif Secure Proxy](https://www.moesif.com/docs/platform/secure-proxy/), please add below:
+If you are using a proxy, for example: [Moesif Secure Proxy](https://www.moesif.com/docs/platform/secure-proxy/), please add below:
 
 ```
 MOESIF_API_ENDPOINT=https://[HOSTOFYOURPROXY]/api
